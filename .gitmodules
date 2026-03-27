@@ -1,0 +1,12 @@
+[submodule "QTreeInpla"]
+	path = QTreeInpla
+	url = https://github.com/Lamagraph/QTreeInpla.git
+[submodule "QTreeFSharp"]
+	path = QTreeFSharp
+	url = https://github.com/Lamagraph/QTreeFSharp.git
+[submodule "nx-benchmarks"]
+	path = nx-benchmarks
+	url = https://github.com/Lamagraph/nx-benchmarks.git
+[submodule "lagraph-bench"]
+	path = lagraph-bench
+	url = https://github.com/Lamagraph/QTreeInpla.git
