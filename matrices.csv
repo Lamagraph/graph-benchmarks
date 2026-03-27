@@ -1,0 +1,6 @@
+name,algos,mtx_link
+cti,bfs,https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/cti.tar.gz
+bcspwr10,bfs,https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
+3elt_dual,"bfs,tc",https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
+G57,"bfs,tc",https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
+1138_bus,"sssp,tc",https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
