@@ -10,3 +10,9 @@
 [submodule "lagraph-bench"]
 	path = lagraph-bench
 	url = https://github.com/Lamagraph/QTreeInpla.git
+[submodule "GraphBLAS"]
+	path = GraphBLAS
+	url = https://github.com/DrTimothyAldenDavis/GraphBLAS.git
+[submodule "LAGraph"]
+	path = LAGraph
+	url = https://github.com/GraphBLAS/LAGraph.git
