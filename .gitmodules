@@ -1,21 +1,21 @@
 [submodule "QTreeInpla"]
-	path = QTreeInpla
+	path = tools/QTreeInpla
 	url = https://github.com/Lamagraph/QTreeInpla.git
 [submodule "QTreeFSharp"]
-	path = QTreeFSharp
+	path = tools/QTreeFSharp
 	url = https://github.com/Lamagraph/QTreeFSharp.git
 [submodule "nx-benchmarks"]
-	path = nx-benchmarks
+	path = tools/nx-benchmarks
 	url = https://github.com/Lamagraph/nx-benchmarks.git
 [submodule "lagraph-bench"]
-	path = lagraph-bench
+	path = tools/lagraph-bench
 	url = https://github.com/Lamagraph/lagraph-bench.git
 [submodule "GraphBLAS"]
-	path = GraphBLAS
+	path = dependencies/GraphBLAS
 	url = https://github.com/DrTimothyAldenDavis/GraphBLAS.git
 [submodule "LAGraph"]
-	path = LAGraph
+	path = dependencies/LAGraph
 	url = https://github.com/GraphBLAS/LAGraph.git
 [submodule "inpla"]
-	path = inpla
+	path = dependencies/inpla
 	url = https://github.com/Lamagraph/inpla.git
