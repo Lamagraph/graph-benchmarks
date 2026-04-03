@@ -1,0 +1,56 @@
+- name: cti
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/cti.tar.gz
+- name: bcspwr10
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
+- name: 3elt_dual
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
+- name: 3elt_dual
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
+- name: G57
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
+- name: G57
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
+- name: 1138_bus
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
+- name: 1138_bus
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
