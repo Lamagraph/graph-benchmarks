@@ -41,7 +41,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: 1138_bus
-  enabled: true
+  enabled: false
   algorithm: sssp
   tools:
     - networkx
