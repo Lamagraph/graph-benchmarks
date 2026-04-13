@@ -1,4 +1,3 @@
-from enum import Enum, StrEnum, auto
 from pathlib import Path
 import subprocess
 from typing import Annotated
@@ -6,11 +5,7 @@ from typing import Annotated
 import typer
 import yaml
 
-
-class BenchmarkType(StrEnum):
-    BFS = auto()
-    SSSP = auto()
-    TC = auto()
+from common import BenchmarkType
 
 
 def make_GraphBLAS(dependencies_path: Path):

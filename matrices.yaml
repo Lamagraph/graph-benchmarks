@@ -10,6 +10,7 @@
   algorithm: bfs
   tools:
     - networkx
+    - inpla
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
 - name: 3elt_dual
@@ -17,6 +18,7 @@
   algorithm: bfs
   tools:
     - networkx
+    - inpla
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
 - name: 3elt_dual
@@ -41,16 +43,10 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: 1138_bus
-  enabled: false
-  algorithm: sssp
-  tools:
-    - networkx
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
-- name: 1138_bus
   enabled: true
   algorithm: tc
   tools:
     - networkx
+    - inpla
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz

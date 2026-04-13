@@ -5,6 +5,8 @@ from typing import Annotated
 import typer
 import yaml
 
+from common import BenchMatrix
+
 
 def prepare_environment(nx_bench_path: Path):
     subprocess.run(["uv", "sync"], cwd=nx_bench_path, check=True)
@@ -26,9 +28,12 @@ def symlink_matrices(
     matrices_spec_path: Path, matrices_path: Path, nx_bench_path: Path
 ):
     with open(matrices_spec_path, "r", encoding="utf-8") as m_file:
-        matrices = yaml.safe_load(m_file)
+        matrices: list[BenchMatrix] = yaml.safe_load(m_file)
     enabled_matrices = filter(lambda matrix: matrix["enabled"], matrices)
-    for matrix in enabled_matrices:
+    networkx_matrices = filter(
+        lambda matrix: "networkx" in matrix["tools"], enabled_matrices
+    )
+    for matrix in networkx_matrices:
         file_path = matrices_path / (matrix["name"] + ".mtx")
         dst_path = (
             nx_bench_path
