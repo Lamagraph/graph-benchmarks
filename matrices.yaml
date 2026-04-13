@@ -3,6 +3,7 @@
   algorithm: bfs
   tools:
     - networkx
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/cti.tar.gz
 - name: bcspwr10
@@ -11,6 +12,7 @@
   tools:
     - networkx
     - inpla
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
 - name: 3elt_dual
@@ -19,6 +21,7 @@
   tools:
     - networkx
     - inpla
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
 - name: 3elt_dual
@@ -26,6 +29,7 @@
   algorithm: tc
   tools:
     - networkx
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
 - name: G57
@@ -33,6 +37,7 @@
   algorithm: bfs
   tools:
     - networkx
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: G57
@@ -40,6 +45,7 @@
   algorithm: tc
   tools:
     - networkx
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: 1138_bus
@@ -48,5 +54,6 @@
   tools:
     - networkx
     - inpla
+    - lagraph
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
