@@ -19,8 +19,8 @@ def clean_symlinks(nx_bench_path: Path):
     sssp_to_clean = (nx_bench_path / "sssp").glob("**/*.mtx")
     for file in sssp_to_clean:
         file.unlink()
-    triangles_to_clean = (nx_bench_path / "triangles").glob("**/*.mtx")
-    for file in triangles_to_clean:
+    tc_to_clean = (nx_bench_path / "tc").glob("**/*.mtx")
+    for file in tc_to_clean:
         file.unlink()
 
 
@@ -35,11 +35,7 @@ def symlink_matrices(
     )
     for matrix in networkx_matrices:
         file_path = matrices_path / (matrix["name"] + ".mtx")
-        dst_path = (
-            nx_bench_path
-            / ("triangles" if matrix["algorithm"] == "tc" else matrix["algorithm"])
-            / (matrix["name"] + ".mtx")
-        )
+        dst_path = nx_bench_path / (matrix["algorithm"]) / (matrix["name"] + ".mtx")
         dst_path.symlink_to(file_path)
 
 
