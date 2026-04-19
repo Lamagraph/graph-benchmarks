@@ -1,5 +1,5 @@
 - name: cti
-  enabled: true
+  enabled: false
   algorithm: bfs
   tools:
     - networkx
@@ -18,7 +18,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
 - name: 3elt_dual
-  enabled: true
+  enabled: false
   algorithm: bfs
   tools:
     - networkx
@@ -28,7 +28,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
 - name: 3elt_dual
-  enabled: true
+  enabled: false
   algorithm: tc
   tools:
     - networkx
@@ -37,7 +37,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
 - name: G57
-  enabled: true
+  enabled: false
   algorithm: bfs
   tools:
     - networkx
@@ -46,7 +46,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: G57
-  enabled: true
+  enabled: false
   algorithm: tc
   tools:
     - networkx
@@ -55,7 +55,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
 - name: 1138_bus
-  enabled: true
+  enabled: false
   algorithm: tc
   tools:
     - networkx
