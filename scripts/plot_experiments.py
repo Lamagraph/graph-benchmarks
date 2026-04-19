@@ -104,7 +104,7 @@ def draw_fsharp(
 
 
 def get_inpla_time(result: str) -> float:
-    if "Error" in result:
+    if "Error".casefold() in result.casefold():
         return math.nan
     return float(result.splitlines()[-1].split(" ")[-2])
 
@@ -182,10 +182,10 @@ def plot_graph(
     ax.set_xticks(thread_counts)
     ax.set_xlabel("Threads")
     ax.set_ylabel("Time, s")
-    # ax.set_yscale("log")
+    ax.set_yscale("log")
 
-    # draw_fsharp(results, matrix, thread_counts, ax)
-    # draw_inpla(results, matrix, thread_counts, ax)
+    draw_fsharp(results, matrix, thread_counts, ax)
+    draw_inpla(results, matrix, thread_counts, ax)
     draw_lagraph(results, matrix, thread_counts, ax)
     draw_networkx(results, matrix, thread_counts, ax)
 
