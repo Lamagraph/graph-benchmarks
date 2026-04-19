@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -248,10 +249,10 @@ def main(
     print("*** Writing results ***")
     raw_results_path.mkdir(parents=True, exist_ok=True)
     results_path = raw_results_path / (
-        datetime.now().astimezone().isoformat(timespec="minutes") + "_lagraph.yaml"
+        datetime.now().astimezone().isoformat(timespec="minutes") + "_lagraph.json"
     )
     with open(results_path, "w", encoding="utf-8") as r_file:
-        yaml.safe_dump(results, r_file)
+        json.dump(results, r_file)
     print("Wrote to", str(results_path))
 
 
