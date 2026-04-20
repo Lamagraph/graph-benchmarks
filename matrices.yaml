@@ -64,3 +64,23 @@
     - fsharp
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
+- name: bcspwr10
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
+- name: id2010
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/id2010.tar.gz
