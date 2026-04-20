@@ -8,7 +8,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/cti.tar.gz
 - name: bcspwr10
-  enabled: true
+  enabled: false
   algorithm: bfs
   tools:
     - networkx
@@ -65,7 +65,7 @@
   reorder: false
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
 - name: bcspwr10
-  enabled: true
+  enabled: false
   algorithm: bfs
   tools:
     - networkx
@@ -74,7 +74,7 @@
     - fsharp
   reorder: true
   link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
-- name: id2010
+- name: psmigr_1
   enabled: true
   algorithm: sssp
   tools:
@@ -83,4 +83,24 @@
     - lagraph
     - fsharp
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/id2010.tar.gz
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/psmigr_1.tar.gz
+- name: 1138_bus
+  enabled: false
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
+- name: 1138_bus
+  enabled: false
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz

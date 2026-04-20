@@ -7,7 +7,7 @@ from typing import Annotated
 import typer
 import yaml
 
-from common import BenchMatrix
+from common import BenchMatrix, get_matrix_filename_mtx
 
 
 def prepare_environment(nx_bench_path: Path):
@@ -39,8 +39,10 @@ def symlink_matrices(
         lambda matrix: "networkx" in matrix["tools"], enabled_matrices
     )
     for matrix in networkx_matrices:
-        file_path = matrices_path / (matrix["name"] + ".mtx")
-        dst_path = nx_bench_path / (matrix["algorithm"]) / (matrix["name"] + ".mtx")
+        file_path = matrices_path / get_matrix_filename_mtx(matrix)
+        dst_path = (
+            nx_bench_path / (matrix["algorithm"]) / get_matrix_filename_mtx(matrix)
+        )
         dst_path.symlink_to(file_path)
         print("Symlinked", file_path, "to", dst_path)
 

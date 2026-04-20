@@ -11,7 +11,11 @@ import numpy as np
 import typer
 import yaml
 
-from common import BenchMatrix
+from common import (
+    BenchMatrix,
+    get_matrix_base_name,
+    get_matrix_filename_mtx,
+)
 
 
 @dataclass
@@ -86,7 +90,9 @@ def draw_fsharp(
 ):
     benchmark_results = list(
         filter(
-            lambda res: res["Parameters"] == ("MatrixName=" + matrix["name"] + ".mtx"),
+            lambda res: (
+                get_matrix_filename_mtx(matrix).casefold() in res["FullName"].casefold()
+            ),
             results.fsharp_results[matrix["algorithm"]]["Benchmarks"],
         )
     )[0]
@@ -115,7 +121,8 @@ def draw_inpla(
     thread_counts: list[int],
     ax: Axes,
 ):
-    benchmark_result = results.inpla_results[matrix["algorithm"]][matrix["name"]]
+    filename_base = get_matrix_base_name(matrix)
+    benchmark_result = results.inpla_results[matrix["algorithm"]][filename_base]
     time = []
     error = []
     for thread_count in thread_counts:
@@ -135,7 +142,8 @@ def draw_lagraph(
     thread_counts: list[int],
     ax: Axes,
 ):
-    benchmark_result = results.lagraph_results[matrix["algorithm"]][matrix["name"]]
+    filename_base = get_matrix_base_name(matrix)
+    benchmark_result = results.lagraph_results[matrix["algorithm"]][filename_base]
     time = []
     error = []
     for thread_count in thread_counts:
@@ -155,7 +163,7 @@ def draw_networkx(
         filter(
             lambda res: (
                 res["extra_info"]["algorithm"] == matrix["algorithm"]
-                and res["extra_info"]["graph_name"] == matrix["name"]
+                and res["extra_info"]["graph_name"] == get_matrix_base_name(matrix)
             ),
             results.networkx_results["benchmarks"],
         )
@@ -178,7 +186,12 @@ def plot_graph(
 ):
     fig, ax = plt.subplots(layout="constrained")
 
-    ax.set_title(matrix["algorithm"] + " on " + matrix["name"])
+    ax.set_title(
+        matrix["algorithm"]
+        + " on "
+        + matrix["name"]
+        + (", reordered" if matrix["reorder"] else "")
+    )
     ax.set_xticks(thread_counts)
     ax.set_xlabel("Threads")
     ax.set_ylabel("Time, s")
@@ -192,7 +205,11 @@ def plot_graph(
     fig.legend(loc="outside lower center", ncols=4)
 
     result_path = processed_results_path / (
-        matrix["algorithm"] + "_" + matrix["name"] + ".pdf"
+        matrix["algorithm"]
+        + "_"
+        + matrix["name"]
+        + ("_reordered" if matrix["reorder"] else "")
+        + ".pdf"
     )
     plt.savefig(result_path, bbox_inches="tight")
     print("Drawn", result_path)

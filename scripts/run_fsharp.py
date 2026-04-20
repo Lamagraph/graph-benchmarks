@@ -8,7 +8,7 @@ from typing import Annotated
 import typer
 import yaml
 
-from common import BenchMatrix, BenchmarkType
+from common import BenchMatrix, BenchmarkType, get_matrix_filename_mtx
 
 
 def get_file_by_algorithm(fsharp_bench_path: Path, algorithm: BenchmarkType):
@@ -22,13 +22,38 @@ def get_file_by_algorithm(fsharp_bench_path: Path, algorithm: BenchmarkType):
             return base / "Triangles.fs"
 
 
+def clean_symlinks(fsharp_bench_path: Path):
+    data_dir = fsharp_bench_path / "QuadTree.Benchmark" / "data"
+    links_to_clean = data_dir.glob("*.mtx")
+    for file in links_to_clean:
+        file.unlink()
+        print("Cleaned", file)
+
+
+def symlink_matrices(
+    fsharp_matrices: list[BenchMatrix], matrices_path: Path, fsharp_bench_path: Path
+):
+    for matrix in fsharp_matrices:
+        file_path = matrices_path / get_matrix_filename_mtx(matrix)
+        dst_path = (
+            fsharp_bench_path
+            / "QuadTree.Benchmark"
+            / "data"
+            / get_matrix_filename_mtx(matrix)
+        )
+        dst_path.symlink_to(file_path)
+        print("Symlinked", file_path, "to", dst_path)
+
+
 def patch_benchmark(
     fsharp_bench_path: Path,
     fsharp_matrices: list[BenchMatrix],
     algorithm: BenchmarkType,
 ):
     matrices = filter(lambda matrix: matrix["algorithm"] == algorithm, fsharp_matrices)
-    filenames_quoted = map(lambda matrix: '"' + matrix["name"] + '.mtx"', matrices)
+    filenames_quoted = map(
+        lambda matrix: '"' + get_matrix_filename_mtx(matrix) + '"', matrices
+    )
     filenames_str = "[<Params(" + ", ".join(filenames_quoted) + ")>]"
     with open(
         get_file_by_algorithm(fsharp_bench_path, algorithm), "r", encoding="utf-8"
@@ -107,6 +132,15 @@ def main(
     fsharp_matrices = list(
         filter(lambda matrix: "fsharp" in matrix["tools"], enabled_matrices)
     )
+
+    print("*** Cleaning symlinks ***")
+    clean_symlinks(fsharp_bench_path)
+    print("")
+
+    print("*** Symlinking matrices ***")
+    symlink_matrices(fsharp_matrices, matrices_path, fsharp_bench_path)
+    print("")
+
     print("*** Patching benchmarks ***")
     patch_benchmarks(fsharp_bench_path, fsharp_matrices)
     print("")

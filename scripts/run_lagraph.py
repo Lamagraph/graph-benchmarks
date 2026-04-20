@@ -8,7 +8,12 @@ from typing import Annotated
 import typer
 import yaml
 
-from common import BenchMatrix, BenchmarkType
+from common import (
+    BenchMatrix,
+    BenchmarkType,
+    get_matrix_base_name,
+    get_matrix_filename_mtx,
+)
 
 
 def make_GraphBLAS(dependencies_path: Path):
@@ -71,7 +76,7 @@ def run_lagraph(
     run_res = subprocess.run(
         [
             Path("build") / ("lagraph_" + matrix["algorithm"]),
-            matrices_path / (matrix["name"] + ".mtx"),
+            matrices_path / get_matrix_filename_mtx(matrix),
         ],
         cwd=lagraph_bench_path,
         capture_output=True,
@@ -149,8 +154,9 @@ def run_experiments(
         "tc": dict(),
     }
     for matrix in lagraph_matrices:
-        print("Benchmarking", matrix["algorithm"], "on", matrix["name"])
-        results[matrix["algorithm"]][matrix["name"]] = run_experiment(
+        base_name = get_matrix_base_name(matrix)
+        print("Benchmarking", matrix["algorithm"], "on", base_name)
+        results[matrix["algorithm"]][base_name] = run_experiment(
             lagraph_bench_path, matrices_path, matrix, run_count, thread_count
         )
         print("")
@@ -210,7 +216,7 @@ def main(
         ),
     ] = Path("results") / "raw",
     check: Annotated[bool, typer.Option()] = False,
-    run_count: Annotated[int, typer.Option] = 5,
+    run_count: Annotated[int, typer.Option] = 20,
     thread_count: Annotated[int, typer.Option] = 0,
 ):
     print("*** Making GraphBLAS ***")

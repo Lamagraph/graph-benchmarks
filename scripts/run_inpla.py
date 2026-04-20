@@ -2,13 +2,19 @@ from datetime import datetime
 import json
 import os
 from pathlib import Path
+import resource
 import subprocess
 from typing import Annotated
 
 import typer
 import yaml
 
-from common import BenchMatrix
+from common import (
+    BenchMatrix,
+    get_matrix_base_name,
+    get_matrix_filename_in,
+    get_matrix_filename_mtx,
+)
 
 
 def make_inpla(inpla_path: Path):
@@ -33,7 +39,7 @@ def convert_matrix_to_inpla(
     subprocess.run(
         [
             Path("scripts") / "mtx_to_experiment.fsx",
-            matrices_path / (matrix["name"] + ".mtx"),
+            matrices_path / get_matrix_filename_mtx(matrix),
             matrix["algorithm"],
         ],
         cwd=inpla_bench_path,
@@ -54,6 +60,9 @@ def convert_matrices_to_inpla(
 def run_inpla(
     inpla_path: Path, inpla_bench_path: Path, thread_count: int, matrix_path: Path
 ) -> str:
+    resource.setrlimit(
+        resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+    )
     run_res = subprocess.run(
         [inpla_path / "inpla", "-t", str(thread_count), "-f", matrix_path],
         cwd=inpla_bench_path,
@@ -66,7 +75,7 @@ def run_inpla(
             run_res.args,
             "exited with code",
             run_res.returncode,
-            end="",
+            end=" ",
             flush=True,
         )
     return run_res.stdout
@@ -131,13 +140,14 @@ def run_experiments(
         "tc": dict(),
     }
     for matrix in inpla_matrices:
+        filename_base = get_matrix_base_name(matrix)
         matrix_path = (
             inpla_bench_path
             / ("experiments_" + matrix["algorithm"])
-            / (matrix["name"] + ".in")
+            / get_matrix_filename_in(matrix)
         )
-        print("Benchmarking", matrix["algorithm"], "on", matrix["name"])
-        results[matrix["algorithm"]][matrix["name"]] = run_experiment(
+        print("Benchmarking", matrix["algorithm"], "on", filename_base)
+        results[matrix["algorithm"]][filename_base] = run_experiment(
             inpla_path, inpla_bench_path, run_count, thread_count, matrix_path
         )
         print("")
