@@ -25,11 +25,7 @@ class BenchMatrix(TypedDict):
 
 
 def get_matrix_base_name(matrix: BenchMatrix) -> str:
-    return (
-        matrix["name"]
-        + ("_reordered" if matrix["reorder"] else "")
-        + ("_positive" if matrix["algorithm"] == BenchmarkType.SSSP else "")
-    )
+    return matrix["name"] + ("_reordered" if matrix["reorder"] else "")
 
 
 def get_matrix_filename_mtx(matrix: BenchMatrix) -> str:

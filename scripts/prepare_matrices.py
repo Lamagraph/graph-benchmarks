@@ -44,6 +44,17 @@ def main(
         matrices: list[BenchMatrix] = yaml.safe_load(m_file)
     enabled_matrices = list(filter(lambda matrix: matrix["enabled"], matrices))
 
+    print("*** Making matrices nonnegative int ***")
+    enabled_matrix_names = set(map(lambda matrix: matrix["name"], enabled_matrices))
+    for matrix_name in enabled_matrix_names:
+        matrix_path = matrices_path / (matrix_name + ".mtx")
+        subprocess.run(
+            ["uv", "run", Path("scripts") / "make_positive_int.py", matrix_path],
+            check=True,
+        )
+        print("Made nonnegative int matrix", matrix_path)
+    print("")
+
     print("*** Reordering matrices ***")
     matrices_to_reorder = list(
         filter(lambda matrix: matrix["reorder"], enabled_matrices)
@@ -55,27 +66,6 @@ def main(
                 "run",
                 inpla_bench_path / "scripts" / "simple_mtx_reordering.py",
                 matrices_path / (matrix["name"] + ".mtx"),
-            ],
-            check=True,
-        )
-    print("")
-
-    print("*** Making matrices for SSSP positive ***")
-    matrices_to_make_positive = list(
-        filter(
-            lambda matrix: matrix["algorithm"] == BenchmarkType.SSSP, enabled_matrices
-        )
-    )
-    for matrix in matrices_to_make_positive:
-        subprocess.run(
-            [
-                inpla_bench_path / "scripts" / "make_positive.fsx",
-                matrices_path
-                / (
-                    matrix["name"]
-                    + ("_reordered" if matrix["reorder"] else "")
-                    + ".mtx"
-                ),
             ],
             check=True,
         )
