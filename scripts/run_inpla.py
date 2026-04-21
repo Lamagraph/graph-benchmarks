@@ -18,6 +18,7 @@ from common import (
 
 
 def make_inpla(inpla_path: Path):
+    subprocess.run(["make", "clean"], cwd=inpla_path, check=True)
     subprocess.run(["make"], cwd=inpla_path, check=True)
     subprocess.run(["make", "clean"], cwd=inpla_path, check=True)
     subprocess.run(["make", "thread"], cwd=inpla_path, check=True)
@@ -58,13 +59,25 @@ def convert_matrices_to_inpla(
 
 
 def run_inpla(
-    inpla_path: Path, inpla_bench_path: Path, thread_count: int, matrix_path: Path
+    inpla_path: Path,
+    inpla_bench_path: Path,
+    thread_count: int,
+    matrix_path: Path,
+    memory_limit_for_1_thread: int,
 ) -> str:
     resource.setrlimit(
         resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
     )
     run_res = subprocess.run(
-        [inpla_path / "inpla", "-t", str(thread_count), "-f", matrix_path],
+        [
+            inpla_path / "inpla",
+            "-t",
+            str(thread_count),
+            "-f",
+            matrix_path,
+            "-Xms",
+            str(memory_limit_for_1_thread // thread_count),
+        ],
         cwd=inpla_bench_path,
         capture_output=True,
         text=True,
@@ -87,13 +100,20 @@ def run_inpla_many_times(
     run_count: int,
     thread_count: int,
     matrix_path: Path,
+    memory_limit_for_1_thread: int,
 ) -> list[str]:
     result = []
     print("Running with", thread_count, "threads. Run: ", end="")
     for i in range(run_count):
         print(i + 1, "...", sep="", end="", flush=True)
         result.append(
-            run_inpla(inpla_path, inpla_bench_path, thread_count, matrix_path)
+            run_inpla(
+                inpla_path,
+                inpla_bench_path,
+                thread_count,
+                matrix_path,
+                memory_limit_for_1_thread,
+            )
         )
     print("")
     return result
@@ -105,6 +125,7 @@ def run_experiment(
     run_count: int,
     thread_count: int,
     matrix_path: Path,
+    memory_limit_for_1_thread: int,
 ) -> dict[int, list[str]]:
     if thread_count <= 0:
         result = dict()
@@ -116,13 +137,23 @@ def run_experiment(
 
         for thread_count in thread_counts:
             result[thread_count] = run_inpla_many_times(
-                inpla_path, inpla_bench_path, run_count, thread_count, matrix_path
+                inpla_path,
+                inpla_bench_path,
+                run_count,
+                thread_count,
+                matrix_path,
+                memory_limit_for_1_thread,
             )
 
         return result
     else:
         result = run_inpla_many_times(
-            inpla_path, inpla_bench_path, run_count, thread_count, matrix_path
+            inpla_path,
+            inpla_bench_path,
+            run_count,
+            thread_count,
+            matrix_path,
+            memory_limit_for_1_thread,
         )
         return {thread_count: result}
 
@@ -133,6 +164,7 @@ def run_experiments(
     run_count: int,
     thread_count: int,
     inpla_matrices: list[BenchMatrix],
+    memory_limit_for_1_thread: int,
 ):
     results: dict[str, dict[str, dict[int, list[str]]]] = {
         "bfs": dict(),
@@ -148,7 +180,12 @@ def run_experiments(
         )
         print("Benchmarking", matrix["algorithm"], "on", filename_base)
         results[matrix["algorithm"]][filename_base] = run_experiment(
-            inpla_path, inpla_bench_path, run_count, thread_count, matrix_path
+            inpla_path,
+            inpla_bench_path,
+            run_count,
+            thread_count,
+            matrix_path,
+            memory_limit_for_1_thread,
         )
         print("")
 
@@ -209,6 +246,12 @@ def main(
     check: Annotated[bool, typer.Option()] = False,
     run_count: Annotated[int, typer.Option] = 5,
     thread_count: Annotated[int, typer.Option] = 0,
+    memory_limit_for_1_thread: Annotated[
+        int,
+        typer.Option(
+            help="Compute by formula ((desired heap size in GiB) * 2**30 / (88+16) / 1.2), default for 128 GiB machines"
+        ),
+    ] = 1032444062,
 ):
     print("*** Making inpla ***")
     make_inpla(inpla_path)
@@ -231,7 +274,12 @@ def main(
 
     print("*** Running experiments ***")
     results = run_experiments(
-        inpla_path, inpla_bench_path, run_count, thread_count, inpla_matrices
+        inpla_path,
+        inpla_bench_path,
+        run_count,
+        thread_count,
+        inpla_matrices,
+        memory_limit_for_1_thread,
     )
     print("")
 
