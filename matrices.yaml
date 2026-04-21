@@ -1,13 +1,5 @@
-- name: cti
-  enabled: false
-  algorithm: bfs
-  tools:
-    - networkx
-    - lagraph
-    # - fsharp
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/cti.tar.gz
-- name: bcspwr10
+# BFS - Un-reordered / Reordered
+- name: usroads-48
   enabled: false
   algorithm: bfs
   tools:
@@ -16,56 +8,9 @@
     - lagraph
     - fsharp
   reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
-- name: 3elt_dual
-  enabled: false
-  algorithm: bfs
-  tools:
-    - networkx
-    - inpla
-    - lagraph
-    # - fsharp # TODO: fails!
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
-- name: 3elt_dual
-  enabled: false
-  algorithm: tc
-  tools:
-    - networkx
-    - lagraph
-    # - fsharp # TODO: fails!
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/AG-Monien/3elt_dual.tar.gz
-- name: G57
-  enabled: false
-  algorithm: bfs
-  tools:
-    - networkx
-    - lagraph
-    # - fsharp
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
-- name: G57
-  enabled: false
-  algorithm: tc
-  tools:
-    - networkx
-    - lagraph
-    # - fsharp
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/Gset/G57.tar.gz
-- name: 1138_bus
-  enabled: false
-  algorithm: tc
-  tools:
-    - networkx
-    - inpla
-    - lagraph
-    - fsharp
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
-- name: bcspwr10
-  enabled: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Gleich/usroads-48.tar.gz
+- name: usroads-48
+  enabled: true
   algorithm: bfs
   tools:
     - networkx
@@ -73,8 +18,40 @@
     - lagraph
     - fsharp
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
-- name: psmigr_1
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Gleich/usroads-48.tar.gz
+- name: boneS01
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: false
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Oberwolfach/boneS01.tar.gz
+- name: boneS01
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/Oberwolfach/boneS01.tar.gz
+# BFS - Reordered only
+- name: coAuthorsCiteseer
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/coAuthorsCiteseer.tar.gz
+# SSSP - Reordered only
+- name: id2010
   enabled: true
   algorithm: sssp
   tools:
@@ -83,24 +60,35 @@
     - lagraph
     - fsharp
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/psmigr_1.tar.gz
-- name: 1138_bus
-  enabled: false
-  algorithm: bfs
-  tools:
-    - networkx
-    - inpla
-    - lagraph
-    - fsharp
-  reorder: false
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
-- name: 1138_bus
-  enabled: false
-  algorithm: bfs
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/id2010.tar.gz
+- name: il2010
+  enabled: true
+  algorithm: sssp
   tools:
     - networkx
     - inpla
     - lagraph
     - fsharp
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/1138_bus.tar.gz
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/il2010.tar.gz
+# TC - Reordered only
+- name: bcspwr10
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
+- name: delaunay_n13
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: true
+  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/delaunay_n13.tar.gz
