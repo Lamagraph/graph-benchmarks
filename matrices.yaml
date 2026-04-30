@@ -1,6 +1,6 @@
 # BFS - Un-reordered / Reordered
 - name: usroads-48
-  enabled: false
+  enabled: true
   algorithm: bfs
   tools:
     - networkx
@@ -50,8 +50,18 @@
     - fsharp
   reorder: true
   link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/coAuthorsCiteseer.tar.gz
-# SSSP - Reordered only
-- name: id2010
+# SSSP - find 50K vertices matrix and test (Andrews_positive.mtx)
+- name: Andrews_positive
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+  reorder: false
+  link: example.com
+- name: Andrews_positive
   enabled: true
   algorithm: sssp
   tools:
@@ -60,8 +70,54 @@
     - lagraph
     - fsharp
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/id2010.tar.gz
-- name: il2010
+  link: example.com
+# TC - only small matrices
+# Small matrices ==> every algorithm for vine comparison
+- name: gr_30_30
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: false
+  link: example.com
+- name: gr_30_30
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: true
+  link: example.com
+- name: Trefethen_2000
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: false
+  link: example.com
+- name: Trefethen_2000
+  enabled: true
+  algorithm: bfs
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: true
+  link: example.com
+- name: gr_30_30
   enabled: true
   algorithm: sssp
   tools:
@@ -69,10 +125,43 @@
     - inpla
     - lagraph
     - fsharp
+    - vine
+  reorder: false
+  link: example.com
+- name: gr_30_30
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/il2010.tar.gz
-# TC - Reordered only
-- name: bcspwr10
+  link: example.com
+- name: Trefethen_2000
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: false
+  link: example.com
+- name: Trefethen_2000
+  enabled: true
+  algorithm: sssp
+  tools:
+    - networkx
+    - inpla
+    - lagraph
+    - fsharp
+    - vine
+  reorder: true
+  link: example.com
+- name: gr_30_30
   enabled: true
   algorithm: tc
   tools:
@@ -80,9 +169,10 @@
     - inpla
     - lagraph
     - fsharp
-  reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/HB/bcspwr10.tar.gz
-- name: delaunay_n13
+    - vine
+  reorder: false
+  link: example.com
+- name: gr_30_30
   enabled: true
   algorithm: tc
   tools:
@@ -90,5 +180,18 @@
     - inpla
     - lagraph
     - fsharp
+    - vine
   reorder: true
-  link: https://suitesparse-collection-website.herokuapp.com/MM/DIMACS10/delaunay_n13.tar.gz
+  link: example.com
+- name: Trefethen_2000
+  enabled: true
+  algorithm: tc
+  tools:
+    - networkx
+    # - inpla
+    - lagraph
+    - fsharp
+  reorder: false
+  link: example.com
+
+# Trefethen_2000 is not reordered for tc because it makes everything much worse

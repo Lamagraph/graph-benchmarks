@@ -13,6 +13,7 @@ import yaml
 
 from common import (
     BenchMatrix,
+    Tool,
     get_matrix_base_name,
     get_matrix_filename_mtx,
 )
@@ -24,6 +25,7 @@ class Results:
     inpla_results: dict
     lagraph_results: dict
     networkx_results: dict
+    vine_results: dict
 
 
 def load_results(raw_results_path: Path) -> Results:
@@ -79,7 +81,22 @@ def load_results(raw_results_path: Path) -> Results:
         print("QTreeFSharp results weren't found")
         networkx_results = dict()
 
-    return Results(fsharp_results, inpla_results, lagraph_results, networkx_results)
+    try:
+        vine_results_json = sorted(
+            raw_results_path.glob("*_vine.json"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )[0]
+        with open(vine_results_json, "r", encoding="utf-8") as f:
+            vine_results = json.load(f)
+            print("Read", vine_results_json)
+    except FileNotFoundError:
+        print("QTreeVine results weren't found")
+        vine_results = dict()
+
+    return Results(
+        fsharp_results, inpla_results, lagraph_results, networkx_results, vine_results
+    )
 
 
 def draw_fsharp(
@@ -96,16 +113,22 @@ def draw_fsharp(
             results.fsharp_results[matrix["algorithm"]]["Benchmarks"],
         )
     )[0]
-    mean_sec = benchmark_results["Statistics"]["Mean"] / 10e9
-    sd_sec = benchmark_results["Statistics"]["StandardDeviation"] / 10e9
+    mean_sec = benchmark_results["Statistics"]["Mean"] / 1e9
+    sd_sec = benchmark_results["Statistics"]["StandardDeviation"] / 1e9
     ax.plot(
         thread_counts,
         [mean_sec] * len(thread_counts),
-        color="blue",
+        color="#0072B2",
+        linestyle=":",
         label="QTreeFSharp",
     )
     ax.fill_between(
-        thread_counts, mean_sec - sd_sec, mean_sec + sd_sec, color="blue", alpha=0.2
+        thread_counts,
+        mean_sec - sd_sec,
+        mean_sec + sd_sec,
+        color="#0072B2",
+        linestyle=":",
+        alpha=0.2,
     )
 
 
@@ -129,7 +152,14 @@ def draw_inpla(
         times = list(map(get_inpla_time, benchmark_result[str(thread_count)]))
         time.append(np.nanmean(times))
         error.append(np.nanstd(times))
-    ax.errorbar(thread_counts, time, yerr=error, color="red", label="QTreeInpla")
+    ax.errorbar(
+        thread_counts,
+        time,
+        yerr=error,
+        color="#F0E442",
+        linestyle="-.",
+        label="QTreeInpla",
+    )
 
 
 def get_lagraph_time(result: str) -> float:
@@ -150,7 +180,14 @@ def draw_lagraph(
         times = list(map(get_lagraph_time, benchmark_result[str(thread_count)]))
         time.append(np.mean(times))
         error.append(np.std(times))
-    ax.errorbar(thread_counts, time, yerr=error, color="green", label="LaGraph")
+    ax.errorbar(
+        thread_counts,
+        time,
+        yerr=error,
+        color="#E69F00",
+        linestyle="--",
+        label="LaGraph",
+    )
 
 
 def draw_networkx(
@@ -171,10 +208,47 @@ def draw_networkx(
     mean_sec = benchmark_results["stats"]["mean"]
     sd_sec = benchmark_results["stats"]["stddev"]
     ax.plot(
-        thread_counts, [mean_sec] * len(thread_counts), color="yellow", label="NetworkX"
+        thread_counts,
+        [mean_sec] * len(thread_counts),
+        color="#000000",
+        linestyle="-",
+        label="NetworkX",
     )
     ax.fill_between(
-        thread_counts, mean_sec - sd_sec, mean_sec + sd_sec, color="yellow", alpha=0.2
+        thread_counts,
+        mean_sec - sd_sec,
+        mean_sec + sd_sec,
+        color="#000000",
+        linestyle="-",
+        alpha=0.2,
+    )
+
+
+def get_vine_time(result: str) -> float:
+    return float(result.split(" ")[-2])
+
+
+def draw_vine(
+    results: Results,
+    matrix: BenchMatrix,
+    thread_counts: list[int],
+    ax: Axes,
+):
+    filename_base = get_matrix_base_name(matrix)
+    benchmark_result = results.vine_results[matrix["algorithm"]][filename_base]
+    time = []
+    error = []
+    for thread_count in thread_counts:
+        times = list(map(get_vine_time, benchmark_result[str(thread_count)]))
+        time.append(np.mean(times))
+        error.append(np.std(times))
+    ax.errorbar(
+        thread_counts,
+        time,
+        yerr=error,
+        color="#CC79A7",
+        linestyle=(0, (3, 1, 1, 1, 1, 1)),
+        label="Vine",
     )
 
 
@@ -184,6 +258,7 @@ def plot_graph(
     processed_results_path: Path,
     thread_counts: list[int],
 ):
+    print("Processing", matrix["algorithm"], matrix["name"], end="...", flush=True)
     fig, ax = plt.subplots(layout="constrained")
 
     ax.set_title(
@@ -197,12 +272,18 @@ def plot_graph(
     ax.set_ylabel("Time, s")
     ax.set_yscale("log")
 
-    draw_fsharp(results, matrix, thread_counts, ax)
-    draw_inpla(results, matrix, thread_counts, ax)
-    draw_lagraph(results, matrix, thread_counts, ax)
-    draw_networkx(results, matrix, thread_counts, ax)
+    if Tool.VINE in matrix["tools"]:
+        draw_vine(results, matrix, thread_counts, ax)
+    if Tool.INPLA in matrix["tools"]:
+        draw_inpla(results, matrix, thread_counts, ax)
+    if Tool.FSHARP in matrix["tools"]:
+        draw_fsharp(results, matrix, thread_counts, ax)
+    if Tool.NETWORKX in matrix["tools"]:
+        draw_networkx(results, matrix, thread_counts, ax)
+    if Tool.LAGRAPH in matrix["tools"]:
+        draw_lagraph(results, matrix, thread_counts, ax)
 
-    fig.legend(loc="outside lower center", ncols=4)
+    fig.legend(loc="outside lower center", ncols=5)
 
     result_path = processed_results_path / (
         matrix["algorithm"]
@@ -247,6 +328,7 @@ def main(
         ),
     ] = Path("results") / "processed",
     thread_count: Annotated[int, typer.Option] = 0,
+    max_thread_count: Annotated[int, typer.Option] = 0,
 ):
     print("*** Reading results ***")
     results = load_results(raw_results_path)
@@ -257,9 +339,12 @@ def main(
     enabled_matrices = filter(lambda matrix: matrix["enabled"], matrices)
 
     if thread_count <= 0:
-        nproc = os.cpu_count()
-        if nproc is None:
-            raise RuntimeError("Cannot get nproc")
+        if max_thread_count <= 0:
+            nproc = os.cpu_count()
+            if nproc is None:
+                raise RuntimeError("Cannot get nproc")
+        else:
+            nproc = max_thread_count
         thread_counts = [1] + list(range(2, nproc + 1, 2))
     else:
         thread_counts = [thread_count]

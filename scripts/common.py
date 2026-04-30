@@ -13,6 +13,7 @@ class Tool(StrEnum):
     FSHARP = auto()
     INPLA = auto()
     LAGRAPH = auto()
+    VINE = auto()
 
 
 class BenchMatrix(TypedDict):
