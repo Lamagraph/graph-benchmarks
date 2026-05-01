@@ -228,12 +228,16 @@ def main(
 
     for matrix in inpla_vine_matrices:
         algorithms.append(matrix["algorithm"])
-        matrix_names.append(get_matrix_base_name(matrix))
+        matrix_names.append(
+            matrix["name"] + ("\n(reordered)" if matrix["reorder"] else "")
+        )
         tools.append("inpla")
         reduction_count.append(find_inpla_reductions(results, matrix, thread_count))
 
         algorithms.append(matrix["algorithm"])
-        matrix_names.append(get_matrix_base_name(matrix))
+        matrix_names.append(
+            matrix["name"] + ("\n(reordered)" if matrix["reorder"] else "")
+        )
         tools.append("vine")
         reduction_count.append(find_vine_reductions(results, matrix, thread_count))
 
@@ -246,16 +250,55 @@ def main(
         }
     )
     df = df.pivot(
-        index=["algorithm", "matrix"], columns="tool", values="reduction_count"
+        index=["matrix"], columns=["algorithm", "tool"], values="reduction_count"
     )
-    ax = df.plot.bar(
+    print(df)
+    fig, (ax_bfs, ax_sssp, ax_tc) = plt.subplots(
+        1, 3, sharey=True, width_ratios=[2, 2, 1], layout="tight", figsize=(10, 5)
+    )
+    ax_bfs = df["bfs"].plot.bar(
         color={"vine": "#CC79A7", "inpla": "#F0E442"},
         rot=45,
-        legend=True,
-        figsize=(20, 10),
         logy=True,
+        ax=ax_bfs,
+        title="BFS",
+        xlabel="",
+        ylabel="Reductions",
+        legend=False,
     )
-    plt.savefig("abc1.pdf", bbox_inches="tight")
+    ax_sssp = df["sssp"].plot.bar(
+        color={"vine": "#CC79A7", "inpla": "#F0E442"},
+        rot=45,
+        logy=True,
+        ax=ax_sssp,
+        title="SSSP",
+        xlabel="",
+        legend=True,
+    )
+    ax_tc = (
+        df["tc"]
+        .dropna()
+        .plot.bar(
+            color={"vine": "#CC79A7", "inpla": "#F0E442"},
+            rot=45,
+            logy=True,
+            ax=ax_tc,
+            title="TC",
+            xlabel="",
+            legend=False,
+        )
+    )
+    # fig.?
+    # fig.legend(
+    #     loc="outside lower center",
+    #     ncols=2,
+    # )
+    fig.suptitle("Inpla vs. vine reduction count", fontsize=16)
+    plt.tight_layout()
+    fig.subplots_adjust(wspace=0)
+    fig.savefig(
+        "results/processed/inpla_vs_vine_reductions_all.pdf", bbox_inches="tight"
+    )
 
     # print("*** Drawing plots ***")
     # fig, ax = plt.subplots(layout="constrained")
