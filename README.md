@@ -11,7 +11,7 @@ As reference we use
 
 * Level-BFS
 * SSSP
-* triangle counting (Sandia)
+* Triangle Counting (Sandia)
 
 # How to run
 
