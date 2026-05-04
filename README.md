@@ -46,7 +46,7 @@ Full report can be found [here](https://github.com/YaccConstructor/articles/blob
 | Trefethen_2000     | 2,000   | 41,906    |
 | gr_30_30           | 900     | 7,744     |
 
-We use both original matrices and reordered using reverse Cuthill--McKee algorithm.
+We use both original matrices and reordered using reverse Cuthill–McKee algorithm.
 
 ### Evaluation Results
 
