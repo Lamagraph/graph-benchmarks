@@ -4,8 +4,8 @@ This repository contains infrastructure for comparison of different Interaction 
 
 As reference we use
 * Single thread [F# implementation](https://github.com/Lamagraph/QTreeFSharp) that is a prototype for Vina and Inpla.
-* [NetworkX](https://networkx.org/en/) --- well-known Python package for graph analysis.
-* [LAGraph](https://github.com/GraphBLAS/LAGraph) --- collection of linear algebra based graph analysis algorithms implemented using SuiteSparse:GraphBLAS.
+* [NetworkX](https://networkx.org/en/) — well-known Python package for graph analysis.
+* [LAGraph](https://github.com/GraphBLAS/LAGraph) — collection of linear algebra based graph analysis algorithms implemented using SuiteSparse:GraphBLAS.
 
 ## Algorithms
 
