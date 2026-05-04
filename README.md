@@ -9,7 +9,7 @@ As reference we use
 
 ## Algorithms
 
-* Lebel-BFS
+* Level-BFS
 * SSSP
 * triangle counting (Sandia)
 
