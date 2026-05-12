@@ -60,7 +60,7 @@
     - lagraph
     - fsharp
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/Andrews/Andrews
 - name: Andrews_positive
   enabled: true
   algorithm: sssp
@@ -70,7 +70,7 @@
     - lagraph
     - fsharp
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/Andrews/Andrews
 # TC - only small matrices
 # Small matrices ==> every algorithm for vine comparison
 - name: gr_30_30
@@ -83,7 +83,7 @@
     - fsharp
     - vine
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: gr_30_30
   enabled: true
   algorithm: bfs
@@ -94,7 +94,7 @@
     - fsharp
     - vine
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: Trefethen_2000
   enabled: true
   algorithm: bfs
@@ -105,7 +105,7 @@
     - fsharp
     - vine
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/JGD_Trefethen/Trefethen_2000
 - name: Trefethen_2000
   enabled: true
   algorithm: bfs
@@ -116,7 +116,7 @@
     - fsharp
     - vine
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/JGD_Trefethen/Trefethen_2000
 - name: gr_30_30
   enabled: true
   algorithm: sssp
@@ -127,7 +127,7 @@
     - fsharp
     - vine
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: gr_30_30
   enabled: true
   algorithm: sssp
@@ -138,7 +138,7 @@
     - fsharp
     - vine
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: Trefethen_2000
   enabled: true
   algorithm: sssp
@@ -149,7 +149,7 @@
     - fsharp
     - vine
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/JGD_Trefethen/Trefethen_2000
 - name: Trefethen_2000
   enabled: true
   algorithm: sssp
@@ -160,7 +160,7 @@
     - fsharp
     - vine
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/JGD_Trefethen/Trefethen_2000
 - name: gr_30_30
   enabled: true
   algorithm: tc
@@ -171,7 +171,7 @@
     - fsharp
     - vine
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: gr_30_30
   enabled: true
   algorithm: tc
@@ -182,7 +182,7 @@
     - fsharp
     - vine
   reorder: true
-  link: example.com
+  link: https://sparse.tamu.edu/HB/gr_30_30
 - name: Trefethen_2000
   enabled: true
   algorithm: tc
@@ -192,6 +192,6 @@
     - lagraph
     - fsharp
   reorder: false
-  link: example.com
+  link: https://sparse.tamu.edu/JGD_Trefethen/Trefethen_2000
 
 # Trefethen_2000 is not reordered for tc because it makes everything much worse
