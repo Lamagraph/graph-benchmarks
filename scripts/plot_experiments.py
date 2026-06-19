@@ -186,7 +186,7 @@ def draw_lagraph(
         yerr=error,
         color="#E69F00",
         linestyle="--",
-        label="LaGraph",
+        label="LAGraph",
     )
 
 
@@ -262,7 +262,7 @@ def plot_graph(
     fig, ax = plt.subplots(layout="constrained")
 
     ax.set_title(
-        matrix["algorithm"]
+        matrix["algorithm"].upper()
         + " on "
         + matrix["name"]
         + (", reordered" if matrix["reorder"] else "")

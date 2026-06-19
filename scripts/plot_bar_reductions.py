@@ -275,6 +275,7 @@ def main(
         xlabel="",
         legend=True,
     )
+    ax_sssp.legend(["Inpla", "Vine"])
     ax_tc = (
         df["tc"]
         .dropna()
@@ -293,7 +294,7 @@ def main(
     #     loc="outside lower center",
     #     ncols=2,
     # )
-    fig.suptitle("Inpla vs. vine reduction count", fontsize=16)
+    fig.suptitle("Inpla vs. Vine reduction count", fontsize=16)
     plt.tight_layout()
     fig.subplots_adjust(wspace=0)
     fig.savefig(
