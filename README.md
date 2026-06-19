@@ -36,6 +36,7 @@ $ uv run scripts/plot_experiments.py
 
 Brief results are presented below.
 Full report can be found [here](https://github.com/YaccConstructor/articles/blob/master/InProgress/GraphBLAS_in_InteractionNets/GraphBLAS_in_Interaction_Nets.pdf).
+For version of this repository, used in the article see tag `gcm2026`.
 
 ### Graphs
 
