@@ -243,6 +243,20 @@ wheels = [
 ]
 
 [[package]]
+name = "dataclass-wizard"
+version = "0.39.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/ea/6b2811092feecbe9d672e3641196ac5fcbec6664074da5dec8b9fd9b9059/dataclass_wizard-0.39.1.tar.gz", hash = "sha256:1679948ed7c62103f40b34df97d03b35e6b2ad50f58173fdbe30074e2e4730f2", size = 361190, upload-time = "2026-01-06T03:30:57.054Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/a0/a221942b3fbbafaea4e211744d298366b6a9712c1aa336b05fc1c865ac0c/dataclass_wizard-0.39.1-py3-none-any.whl", hash = "sha256:3324e59eca705882eb34e2b3989b2beadd8c2b523e6269d4002cf1a4a5bf703b", size = 215344, upload-time = "2026-01-06T03:30:54.915Z" },
+]
+
+[package.optional-dependencies]
+yaml = [
+    { name = "pyyaml" },
+]
+
+[[package]]
 name = "debugpy"
 version = "1.8.20"
 source = { registry = "https://pypi.org/simple" }
@@ -315,6 +329,7 @@ name = "graph-benchmarks"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "dataclass-wizard", extra = ["yaml"] },
     { name = "ipykernel" },
     { name = "matplotlib" },
     { name = "pandas" },
@@ -326,6 +341,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "dataclass-wizard", extras = ["yaml"], specifier = ">=0.39.1" },
     { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "pandas", specifier = ">=3.0.2" },
