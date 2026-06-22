@@ -5,7 +5,7 @@ import shutil
 import requests
 import typer
 
-from .common import Matrix, get_enabled_matrices
+from .common import Matrix, get_enabled_matrices, get_unique_by_name_matrices
 from .type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
@@ -41,8 +41,9 @@ def download(
 ):
     log.info("Reading matrices spec from %s", matrices_spec_path)
     matrices = get_enabled_matrices(matrices_spec_path)
+    matrices = get_unique_by_name_matrices(matrices)
     matrix_names = list(map(lambda matrix: matrix.name, matrices))
-    log.info("Enabled matrices: %s", set(matrix_names))
+    log.info("Enabled matrices: %s", matrix_names)
 
     log.info("Creating %s", tmp_path)
     tmp_path.mkdir(exist_ok=True)
