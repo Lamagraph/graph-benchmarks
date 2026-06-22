@@ -4,9 +4,11 @@ import typer
 from rich.logging import RichHandler
 
 from src.download import app as download_app
+from src.prepare_matrices import app as prepare_matrices_app
 
 app = typer.Typer()
 app.add_typer(download_app)
+app.add_typer(prepare_matrices_app)
 
 log_file_handler = logging.FileHandler("log.txt")
 
