@@ -4,7 +4,7 @@ from typing import Annotated
 import typer
 
 
-FilePathOption = Annotated[
+type FilePathOption = Annotated[
     Path,
     typer.Option(
         exists=True,
@@ -15,7 +15,7 @@ FilePathOption = Annotated[
     ),
 ]
 
-DirPathOption = Annotated[
+type DirPathOption = Annotated[
     Path,
     typer.Option(
         file_okay=False,
