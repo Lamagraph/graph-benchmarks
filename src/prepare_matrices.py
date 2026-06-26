@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 import scipy.sparse as sp
@@ -57,7 +58,8 @@ def reorder_rcm_matrix(matrices_path: Path, matrix: Matrix):
         matrix_array_reordered = matrix_array[perm, :][:, perm]
     else:
         matrix_array_reordered = matrix_array[perm, :]
-
+    name, ext = os.path.splitext(matrix_path)
+    matrix_path = name + "_reordered" + ext
     mmwrite(matrix_path, matrix_array_reordered)
 
 
