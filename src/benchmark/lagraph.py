@@ -9,7 +9,7 @@ from ..common import (
     Matrix,
     Tool,
     comma_separated_str_to_int_list,
-    get_enabled_matrices,
+    get_enabled_matrices_for_tool,
     get_matrix_filename_mtx,
     run_benchmarks,
     write_results,
@@ -122,8 +122,7 @@ def lagraph(
     build_benchmarks(dependencies_path, lagraph_bench_path)
     log.info("Successfully built LAGraph")
 
-    matrices = get_enabled_matrices(matrices_spec_path)
-    matrices = list(filter(lambda matrix: Tool.LAGRAPH in matrix.tools, matrices))
+    matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.LAGRAPH)
 
     # parser doesn't work
     # see https://github.com/fastapi/typer/discussions/1393
