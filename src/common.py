@@ -53,6 +53,13 @@ def get_enabled_matrices(matrices_spec_path: Path) -> list[Matrix]:
     return list(filter(lambda matrix: matrix.enabled, matrices))
 
 
+def get_enabled_matrices_for_tool(matrices_spec_path: Path, tool: Tool) -> list[Matrix]:
+    matrices: List[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
+    return list(
+        filter(lambda matrix: matrix.enabled and (tool in matrix.tools), matrices)
+    )
+
+
 def get_unique_by_name_matrices(matrices: list[Matrix]) -> list[Matrix]:
     return list(unique(matrices, attrgetter("name")))
 
