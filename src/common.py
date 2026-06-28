@@ -157,6 +157,6 @@ def write_results(results: Results, raw_results_path: Path, tool: Tool):
         + ".json"
     )
     with open(results_path, "w", encoding="utf-8") as r_file:
-        json.dump(results, r_file)
+        json.dump(results, r_file, indent=4)
 
     logging.info("Successfully wrote results to %s", results_path)
