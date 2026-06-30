@@ -1,4 +1,6 @@
+from datetime import datetime
 import logging
+from pathlib import Path
 
 import typer
 from rich.logging import RichHandler
@@ -12,17 +14,21 @@ app.add_typer(download_app)
 app.add_typer(prepare_matrices_app)
 app.add_typer(benchmark_app, name="benchmark")
 
-log_file_handler = logging.FileHandler("log.txt")
+logger = logging.getLogger("app")
+logger.setLevel(logging.INFO)
 
-FORMAT = "%(message)s"
-logging.basicConfig(
-    level="NOTSET",
-    format=FORMAT,
-    datefmt="[%X]",
-    handlers=[RichHandler(), log_file_handler],
+Path("logs").mkdir(exist_ok=True)
+timestamp = datetime.now().astimezone().isoformat(timespec="minutes")
+log_filename = Path("logs") / f"log_{timestamp}.log"
+
+rich_handler = RichHandler()
+file_handler = logging.FileHandler(log_filename)
+file_handler.setFormatter(
+    logging.Formatter("%(asctime)-15s - %(levelname)s - %(message)s")
 )
 
-log = logging.getLogger("rich")
+logger.addHandler(rich_handler)
+logger.addHandler(file_handler)
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ from ..common import (
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-log = logging.getLogger("rich")
+logger = logging.getLogger("app")
 
 
 def make_inpla(inpla_path: Path) -> None:
@@ -104,24 +104,24 @@ def inpla(
         ),
     ] = 1032444062,
 ):
-    logging.info("Building inpla")
+    logger.info("Building inpla")
     make_inpla(inpla_path)
-    logging.info("Successfully built inpla")
+    logger.info("Successfully built inpla")
 
     if check:
-        logging.info("Checking inpla")
+        logger.info("Checking inpla")
         check_inpla(inpla_path, inpla_bench_path)
-        logging.info("Successfully checked inpla")
+        logger.info("Successfully checked inpla")
 
     matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.INPLA)
 
-    logging.info("Converting matrices for inpla")
+    logger.info("Converting matrices for inpla")
     convert_matrices_to_inpla(matrices, matrices_path, inpla_bench_path)
 
     # parser doesn't work
     # see https://github.com/fastapi/typer/discussions/1393
     thread_counts_t = comma_separated_str_to_int_list(thread_counts)
-    logging.info(
+    logger.info(
         "Starting inpla benchmarks with thread counts: %s",
         thread_counts_t,
     )

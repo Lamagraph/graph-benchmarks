@@ -16,6 +16,8 @@ type RunToolCallable = Callable[
     Concatenate[Matrix, int, ...], subprocess.CompletedProcess[str]
 ]
 
+logger = logging.getLogger("app")
+
 
 class Algorithm(StrEnum):
     BFS = auto()
@@ -92,12 +94,12 @@ def run_tool_many_times(
     **kwargs,
 ):
     results = []
-    logging.info("Running with %s threads", thread_count)
+    logger.info("Running with %s threads", thread_count)
     for i in range(run_count):
-        logging.info("Starting run %s", i)
+        logger.info("Starting run %s", i)
         result = run_tool(matrix, thread_count, **kwargs)
         if result.returncode != 0:
-            logging.warning(
+            logger.warning(
                 "Process %s exited with code %s",
                 result.args,
                 result.returncode,
@@ -144,7 +146,7 @@ def run_benchmarks(
 
     for matrix in matrices:
         base_name = get_matrix_base_name(matrix)
-        logging.info("Benchmarking %s on %s", matrix.algorithm, base_name)
+        logger.info("Benchmarking %s on %s", matrix.algorithm, base_name)
         results[str(matrix.algorithm)][base_name] = run_benchmark(
             matrix, thread_counts, run_count, run_tool, **kwargs
         )
@@ -163,4 +165,4 @@ def write_results(results: Results, raw_results_path: Path, tool: Tool):
     with open(results_path, "w", encoding="utf-8") as r_file:
         json.dump(results, r_file, indent=4)
 
-    logging.info("Successfully wrote results to %s", results_path)
+    logger.info("Successfully wrote results to %s", results_path)
