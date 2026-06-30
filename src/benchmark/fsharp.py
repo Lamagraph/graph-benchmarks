@@ -20,8 +20,7 @@ from ..common import (
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-log = logging.getLogger("rich")
-
+logger = logging.getLogger("app")
 
 DOTNETBENCHMARK_RUN_COMMAND = [
     "dotnet",
@@ -60,7 +59,7 @@ def clean_symlinks(fsharp_bench_path: Path) -> None:
     data_dir = get_benchmark_project_data_path(fsharp_bench_path)
     links_to_clean = data_dir.glob("*.mtx")
     for file in links_to_clean:
-        log.info("Removing %s", file)
+        logger.info("Removing %s", file)
         file.unlink()
 
 
@@ -73,7 +72,7 @@ def symlink_matrices(
         dst_path = get_benchmark_project_data_path(
             fsharp_bench_path
         ) / get_matrix_filename_mtx(matrix)
-        log.info("Symlinking %s to %s", file_path, dst_path)
+        logger.info("Symlinking %s to %s", file_path, dst_path)
         dst_path.symlink_to(file_path)
 
 
@@ -95,7 +94,7 @@ def patch_benchmark(
     with open(file_to_path, "r", encoding="utf-8") as f:
         file = f.read()
     file_edited = re.sub(r"\[<Params\(.*\)>]", filenames_str, file)
-    log.info(
+    logger.info(
         "Patching %s with %s",
         file_to_path,
         filenames_str,
@@ -112,7 +111,7 @@ def patch_benchmarks(matrices: list[Matrix], fsharp_bench_path: Path) -> None:
 def collect_result_of_algorithm(
     results: Results, fsharp_bench_path: Path, algorithm: Algorithm
 ) -> None:
-    log.info("Collecting %s results", algorithm.name)
+    logger.info("Collecting %s results", algorithm.name)
     results_dir = fsharp_bench_path / "BenchmarkDotNet.Artifacts" / "results"
     results_json = results_dir / (
         "QuadTree.Benchmarks."
@@ -140,21 +139,21 @@ def fsharp(
     clean_benchmark: Annotated[bool, typer.Option()] = False,
 ):
     if clean_benchmark:
-        log.info("Cleaning QTreeFSharp")
+        logger.info("Cleaning QTreeFSharp")
         subprocess.run(["git", "restore", "."], cwd=fsharp_bench_path, check=True)
 
     matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.FSHARP)
 
-    log.info("Removing matrices in QTreeFSharp")
+    logger.info("Removing matrices in QTreeFSharp")
     clean_symlinks(fsharp_bench_path)
 
-    log.info("Symlinking matrices to QTreeFSharp")
+    logger.info("Symlinking matrices to QTreeFSharp")
     symlink_matrices(matrices, matrices_path, fsharp_bench_path)
 
-    log.info("Enabling matrices in QTreeFSharp")
+    logger.info("Enabling matrices in QTreeFSharp")
     patch_benchmarks(matrices, fsharp_bench_path)
 
-    log.info("Starting QTreeFSharp benchmark")
+    logger.info("Starting QTreeFSharp benchmark")
     subprocess.run(
         DOTNETBENCHMARK_RUN_COMMAND,
         cwd=fsharp_bench_path,

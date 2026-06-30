@@ -17,7 +17,7 @@ from ..common import (
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-log = logging.getLogger("rich")
+logger = logging.getLogger("app")
 
 
 def build_GraphBLAS(dependencies_path: Path):
@@ -101,33 +101,33 @@ def lagraph(
     run_count: Annotated[int, typer.Option] = 20,
     thread_counts: Annotated[str | None, typer.Option()] = None,
 ):
-    log.info("Building GraphBLAS")
+    logger.info("Building GraphBLAS")
     build_GraphBLAS(dependencies_path)
-    log.info("Successfully built GraphBLAS")
+    logger.info("Successfully built GraphBLAS")
 
     if check:
-        log.info("Checking GraphBLAS")
+        logger.info("Checking GraphBLAS")
         check_GraphBLAS(dependencies_path)
-        log.info("Successfully checked GraphBLAS")
+        logger.info("Successfully checked GraphBLAS")
 
-    log.info("Building LAGraph")
+    logger.info("Building LAGraph")
     build_LAGraph(dependencies_path)
-    log.info("Successfully built LAGraph")
+    logger.info("Successfully built LAGraph")
     if check:
-        log.info("Checking LAGraph")
+        logger.info("Checking LAGraph")
         check_LAGraph(dependencies_path)
-        log.info("Successfully checked LAGraph")
+        logger.info("Successfully checked LAGraph")
 
-    log.info("Building benchmarks")
+    logger.info("Building benchmarks")
     build_benchmarks(dependencies_path, lagraph_bench_path)
-    log.info("Successfully built LAGraph")
+    logger.info("Successfully built LAGraph")
 
     matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.LAGRAPH)
 
     # parser doesn't work
     # see https://github.com/fastapi/typer/discussions/1393
     thread_counts_t = comma_separated_str_to_int_list(thread_counts)
-    logging.info(
+    logger.info(
         "Starting LAGraph benchmarks with thread counts: %s",
         thread_counts_t,
     )
