@@ -72,6 +72,10 @@ def get_matrix_filename_mtx(matrix: Matrix) -> str:
     return get_matrix_base_name(matrix) + ".mtx"
 
 
+def get_matrix_filename_in(matrix: Matrix) -> str:
+    return get_matrix_base_name(matrix) + ".in"
+
+
 def comma_separated_str_to_int_list(str: str | None) -> list[int] | None:
     if str is None:
         return None
