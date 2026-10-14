@@ -55,3 +55,7 @@ We use both original matrices and reordered using reverse Cuthill–McKee algori
 ![bfs for Trefethen_2000](/figures/bfs_trefethen_2000.svg)
 ![sssp for Trefethen_2000](/figures/sssp_trefethen_2000.svg)
 ![tc for gr_30_30](/figures/tc_gr_30_30.svg)
+
+# Adding new tools
+
+See [AGENTS.md](AGENTS.md) and [EXTENDING.md](EXTENDING.md).
