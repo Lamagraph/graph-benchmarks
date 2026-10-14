@@ -125,8 +125,7 @@ def lagraph(
 
     matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.LAGRAPH)
 
-    # parser doesn't work
-    # see https://github.com/fastapi/typer/discussions/1393
+    # See inpla.py for comments on this decision
     thread_counts_t = comma_separated_str_to_int_list(thread_counts)
     logger.info(
         "Starting LAGraph benchmarks with thread counts: %s",
