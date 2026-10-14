@@ -119,8 +119,9 @@ def inpla(
     logger.info("Converting matrices for inpla")
     convert_matrices_to_inpla(matrices, matrices_path, inpla_bench_path)
 
-    # parser doesn't work
-    # see https://github.com/fastapi/typer/discussions/1393
+    # Manually parsed: list[int] annotations in typer wrap parser results in
+    # an extra list (multiple=True), unfixed as of typer 0.27.3.
+    # https://github.com/fastapi/typer/discussions/1393
     thread_counts_t = comma_separated_str_to_int_list(thread_counts)
     logger.info(
         "Starting inpla benchmarks with thread counts: %s",
