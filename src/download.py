@@ -1,6 +1,6 @@
 import logging
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import requests
 import typer
@@ -42,7 +42,7 @@ def download(
     logger.info("Reading matrices spec from %s", matrices_spec_path)
     matrices = get_enabled_matrices(matrices_spec_path)
     matrices = get_unique_by_name_matrices(matrices)
-    matrix_names = list(map(lambda matrix: matrix.name, matrices))
+    matrix_names = [matrix.name for matrix in matrices]
     logger.info("Enabled matrices: %s", matrix_names)
 
     logger.info("Creating %s", tmp_path)

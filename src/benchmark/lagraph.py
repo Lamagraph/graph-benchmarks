@@ -1,6 +1,6 @@
 import logging
-from pathlib import Path
 import subprocess
+from pathlib import Path
 from typing import Annotated
 
 import typer
@@ -87,6 +87,7 @@ def run_lagraph(
         capture_output=True,
         text=True,
         env={"OMP_NUM_THREADS": str(thread_count)},
+        check=True,
     )
 
 

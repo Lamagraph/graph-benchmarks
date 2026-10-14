@@ -3,7 +3,6 @@ from typing import Annotated
 
 import typer
 
-
 FilePathOption = Annotated[
     Path,
     typer.Option(

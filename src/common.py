@@ -1,13 +1,14 @@
+import json
+import logging
+import os
+import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum, auto
-import json
-import logging
 from operator import attrgetter
-import os
 from pathlib import Path
-import subprocess
-from typing import Callable, Concatenate, List, TypedDict
+from typing import Concatenate, TypedDict
 
 from dataclass_wizard import YAMLWizard
 from toolz.itertoolz import unique
@@ -51,12 +52,12 @@ class Results(TypedDict):
 
 
 def get_enabled_matrices(matrices_spec_path: Path) -> list[Matrix]:
-    matrices: List[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
+    matrices: list[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
     return list(filter(lambda matrix: matrix.enabled, matrices))
 
 
 def get_enabled_matrices_for_tool(matrices_spec_path: Path, tool: Tool) -> list[Matrix]:
-    matrices: List[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
+    matrices: list[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
     return list(
         filter(lambda matrix: matrix.enabled and (tool in matrix.tools), matrices)
     )
@@ -82,7 +83,7 @@ def comma_separated_str_to_int_list(str: str | None) -> list[int] | None:
     if str is None:
         return None
     else:
-        tmp = list(map(lambda x: int(x), str.split(",")))
+        tmp = [int(x) for x in str.split(",")]
         return tmp
 
 
@@ -121,7 +122,7 @@ def run_benchmark(
             raise RuntimeError("Cannot get nproc")
         thread_counts = [1] + list(range(2, nproc + 1, 2))
 
-    result: dict[int, list[str]] = dict()
+    result: dict[int, list[str]] = {}
 
     for thread_count in thread_counts:
         result[thread_count] = run_tool_many_times(
@@ -139,9 +140,9 @@ def run_benchmarks(
     **kwargs,
 ):
     results: Results = {
-        "bfs": dict(),
-        "sssp": dict(),
-        "tc": dict(),
+        "bfs": {},
+        "sssp": {},
+        "tc": {},
     }
 
     for matrix in matrices:

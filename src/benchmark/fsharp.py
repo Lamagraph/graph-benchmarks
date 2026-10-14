@@ -1,8 +1,8 @@
 import json
 import logging
-from pathlib import Path
 import re
 import subprocess
+from pathlib import Path
 from typing import Annotated
 
 import typer
@@ -10,12 +10,12 @@ import typer
 from ..common import (
     Algorithm,
     Matrix,
+    Results,
     Tool,
     get_enabled_matrices_for_tool,
     get_matrix_filename_mtx,
     get_unique_by_name_matrices,
     write_results,
-    Results,
 )
 from ..type_aliases import DirPathOption, FilePathOption
 
@@ -86,8 +86,8 @@ def patch_benchmark(
     matrices: list[Matrix], fsharp_bench_path: Path, algorithm: Algorithm
 ) -> None:
     matrices_t = filter(lambda matrix: matrix.algorithm == algorithm, matrices)
-    filenames_quoted = map(
-        lambda matrix: '"' + get_matrix_filename_mtx(matrix) + '"', matrices_t
+    filenames_quoted = (
+        '"' + get_matrix_filename_mtx(matrix) + '"' for matrix in matrices_t
     )
     filenames_str = "[<Params(" + ", ".join(filenames_quoted) + ")>]"
     file_to_path = get_file_by_algorithm(fsharp_bench_path, algorithm)
@@ -161,9 +161,9 @@ def fsharp(
     )
 
     results: Results = {
-        "bfs": dict(),
-        "sssp": dict(),
-        "tc": dict(),
+        "bfs": {},
+        "sssp": {},
+        "tc": {},
     }
     collect_results(results, fsharp_bench_path)
 

@@ -1,11 +1,10 @@
 import logging
-from pathlib import Path
 import resource
 import subprocess
+from pathlib import Path
 from typing import Annotated
 
 import typer
-
 
 from ..common import (
     Matrix,
@@ -84,6 +83,8 @@ def run_inpla(
         cwd=inpla_bench_path,
         capture_output=True,
         text=True,
+        # Inpla can crash with non-zero exit code
+        check=False,
     )
 
 
