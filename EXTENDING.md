@@ -71,6 +71,11 @@ from typing import Annotated
 import typer
 
 from ..common import (
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    DEFAULT_RAW_RESULTS_PATH,
+    DEFAULT_TOOLS_PATH,
+    LOGGER_NAME,
     Matrix,
     Tool,
     comma_separated_str_to_int_list,
@@ -82,7 +87,7 @@ from ..common import (
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 ```
 
 Use the shared option aliases from `src/type_aliases.py` (`FilePathOption` for files, `DirPathOption` for directories) and keep the common command signature:
@@ -90,10 +95,10 @@ Use the shared option aliases from `src/type_aliases.py` (`FilePathOption` for f
 ```python
 @app.command()
 def mytool(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
-    mytool_bench_path: DirPathOption = Path("tools") / "my-bench",
-    raw_results_path: DirPathOption = Path("results") / "raw",
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
+    mytool_bench_path: DirPathOption = DEFAULT_TOOLS_PATH / "my-bench",
+    raw_results_path: DirPathOption = DEFAULT_RAW_RESULTS_PATH,
     check: Annotated[bool, typer.Option()] = False,
     run_count: Annotated[int, typer.Option] = 5,
     thread_counts: Annotated[str | None, typer.Option()] = None,
@@ -126,6 +131,7 @@ def run_mytool(
         capture_output=True,
         text=True,
         env={"OMP_NUM_THREADS": str(thread_count)},  # or an equivalent flag
+        check=True,
     )
 ```
 
@@ -156,13 +162,13 @@ clean_artifacts(mytool_bench_path)  # remove stale symlinks / reports
 symlink_matrices(matrices, matrices_path, mytool_bench_path)
 run_harness(mytool_bench_path)  # uv run pytest, dotnet run, ...
 
-results: Results = {"bfs": dict(), "sssp": dict(), "tc": dict()}
+results: Results = make_empty_results()
 collect_results(results, mytool_bench_path)  # fill the shared shape
 write_results(results, raw_results_path, Tool.MYTOOL)
 ```
 
 Reuse the existing helpers as templates: `clean_symlinks` and `symlink_matrices` in `src/benchmark/networkx.py`, and `patch_benchmarks`/`collect_results` in `src/benchmark/fsharp.py`.
-Besides the imports above, Style B usually needs `Results` and `get_unique_by_name_matrices` from `src/common.py`.
+Besides the imports above, Style B usually needs `Results`, `make_empty_results` and `get_unique_by_name_matrices` from `src/common.py`.
 Use `get_unique_by_name_matrices` when the harness must not receive the same matrix twice, and `get_matrix_filename_mtx` for the file name.
 
 If the tool cannot be run with a different thread count, run it once and repeat its result across every requested thread count at plotting time, as NetworkX and QTreeFSharp do.
@@ -234,4 +240,4 @@ After a run, confirm that the `<timestamp>_<tool>.json` file was created under `
 ## Conventions
 
 * In general, see `AGENTS.md`.
-* Log progress with the module-level `logger = logging.getLogger("app")`.
+* Log progress with the module-level `logger = logging.getLogger(LOGGER_NAME)`.
