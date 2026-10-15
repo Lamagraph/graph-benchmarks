@@ -8,6 +8,12 @@ from typing import Annotated
 import typer
 
 from ..common import (
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    DEFAULT_RAW_RESULTS_PATH,
+    DEFAULT_TOOLS_PATH,
+    LOGGER_NAME,
+    MTX_EXTENSION,
     Algorithm,
     Matrix,
     Results,
@@ -15,12 +21,13 @@ from ..common import (
     get_enabled_matrices_for_tool,
     get_matrix_filename_mtx,
     get_unique_by_name_matrices,
+    make_empty_results,
     write_results,
 )
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 
 DOTNETBENCHMARK_RUN_COMMAND = [
     "dotnet",
@@ -57,7 +64,7 @@ def get_benchmark_project_data_path(fsharp_bench_path: Path) -> Path:
 
 def clean_symlinks(fsharp_bench_path: Path) -> None:
     data_dir = get_benchmark_project_data_path(fsharp_bench_path)
-    links_to_clean = data_dir.glob("*.mtx")
+    links_to_clean = data_dir.glob(f"*{MTX_EXTENSION}")
     for file in links_to_clean:
         logger.info("Removing %s", file)
         file.unlink()
@@ -132,10 +139,10 @@ def collect_results(results: Results, fsharp_bench_path: Path) -> None:
 
 @app.command()
 def fsharp(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
-    fsharp_bench_path: DirPathOption = Path("tools") / "QTreeFSharp",
-    raw_results_path: DirPathOption = Path("results") / "raw",
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
+    fsharp_bench_path: DirPathOption = DEFAULT_TOOLS_PATH / "QTreeFSharp",
+    raw_results_path: DirPathOption = DEFAULT_RAW_RESULTS_PATH,
     clean_benchmark: Annotated[bool, typer.Option()] = False,
 ):
     if clean_benchmark:
@@ -160,11 +167,7 @@ def fsharp(
         check=True,
     )
 
-    results: Results = {
-        "bfs": {},
-        "sssp": {},
-        "tc": {},
-    }
+    results: Results = make_empty_results()
     collect_results(results, fsharp_bench_path)
 
     write_results(results, raw_results_path, Tool.FSHARP)

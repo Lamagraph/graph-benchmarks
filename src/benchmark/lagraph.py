@@ -6,6 +6,13 @@ from typing import Annotated
 import typer
 
 from ..common import (
+    DEFAULT_DEPENDENCIES_PATH,
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    DEFAULT_RAW_RESULTS_PATH,
+    DEFAULT_TOOLS_PATH,
+    LOGGER_NAME,
+    MAKE,
     Matrix,
     Tool,
     comma_separated_str_to_int_list,
@@ -16,41 +23,44 @@ from ..common import (
 )
 from ..type_aliases import DirPathOption, FilePathOption
 
+GRAPHBLAS = "GraphBLAS"
+LAGRAPH = "LAGraph"
+
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 
 
 def build_GraphBLAS(dependencies_path: Path):
-    subprocess.run(["make"], cwd=dependencies_path / "GraphBLAS", check=True)
+    subprocess.run([MAKE], cwd=dependencies_path / GRAPHBLAS, check=True)
 
 
 def check_GraphBLAS(dependencies_path: Path):
-    subprocess.run(["make", "check"], cwd=dependencies_path / "GraphBLAS", check=True)
+    subprocess.run([MAKE, "check"], cwd=dependencies_path / GRAPHBLAS, check=True)
 
 
 def build_LAGraph(dependencies_path: Path):
-    subprocess.run(["make"], cwd=dependencies_path / "LAGraph", check=True)
+    subprocess.run([MAKE], cwd=dependencies_path / LAGRAPH, check=True)
 
 
 def check_LAGraph(dependencies_path: Path):
-    subprocess.run(["make", "test"], cwd=dependencies_path / "LAGraph", check=True)
+    subprocess.run([MAKE, "test"], cwd=dependencies_path / LAGRAPH, check=True)
 
 
 def build_benchmarks(dependencies_path: Path, lagraph_bench_path: Path):
     (lagraph_bench_path / "build").mkdir(exist_ok=True)
     cc_common_args = [
         "-I",
-        str(dependencies_path / "GraphBLAS" / "Include"),
+        str(dependencies_path / GRAPHBLAS / "Include"),
         "-I",
-        str(dependencies_path / "LAGraph" / "include"),
+        str(dependencies_path / LAGRAPH / "include"),
         "-L",
-        str(dependencies_path / "GraphBLAS" / "build"),
+        str(dependencies_path / GRAPHBLAS / "build"),
         "-L",
-        str(dependencies_path / "LAGraph" / "build" / "src"),
+        str(dependencies_path / LAGRAPH / "build" / "src"),
         "-lgraphblas",
         "-llagraph",
-        "-Wl,-rpath=" + str(dependencies_path / "GraphBLAS" / "build"),
-        "-Wl,-rpath=" + str(dependencies_path / "LAGraph" / "build" / "src"),
+        "-Wl,-rpath=" + str(dependencies_path / GRAPHBLAS / "build"),
+        "-Wl,-rpath=" + str(dependencies_path / LAGRAPH / "build" / "src"),
         "-O3",
         "-g",
     ]
@@ -93,11 +103,11 @@ def run_lagraph(
 
 @app.command()
 def lagraph(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
-    dependencies_path: DirPathOption = Path("dependencies"),
-    lagraph_bench_path: DirPathOption = Path("tools/lagraph-bench"),
-    raw_results_path: DirPathOption = Path("results") / "raw",
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
+    dependencies_path: DirPathOption = DEFAULT_DEPENDENCIES_PATH,
+    lagraph_bench_path: DirPathOption = DEFAULT_TOOLS_PATH / "lagraph-bench",
+    raw_results_path: DirPathOption = DEFAULT_RAW_RESULTS_PATH,
     check: Annotated[bool, typer.Option()] = False,
     run_count: Annotated[int, typer.Option] = 20,
     thread_counts: Annotated[str | None, typer.Option()] = None,
@@ -121,7 +131,7 @@ def lagraph(
 
     logger.info("Building benchmarks")
     build_benchmarks(dependencies_path, lagraph_bench_path)
-    logger.info("Successfully built LAGraph")
+    logger.info("Successfully built benchmarks")
 
     matrices = get_enabled_matrices_for_tool(matrices_spec_path, Tool.LAGRAPH)
 

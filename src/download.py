@@ -5,11 +5,19 @@ from pathlib import Path
 import requests
 import typer
 
-from .common import Matrix, get_enabled_matrices, get_unique_by_name_matrices
+from .common import (
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    LOGGER_NAME,
+    MTX_EXTENSION,
+    Matrix,
+    get_enabled_matrices,
+    get_unique_by_name_matrices,
+)
 from .type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 
 
 def download_matrix(matrix: Matrix, tmp_path: Path) -> Path:
@@ -25,7 +33,7 @@ def unpack_matrix(matrix_archive_path: Path, matrices_path: Path) -> None:
     shutil.unpack_archive(matrix_archive_path, matrix_archive_path.parent)
     paths_to_copy = list(
         Path(matrix_archive_path.parent).glob(
-            f"**/{matrix_archive_path.name.split('.')[0]}.mtx"
+            f"**/{matrix_archive_path.name.split('.')[0]}{MTX_EXTENSION}"
         )
     )
     for path in paths_to_copy:
@@ -35,8 +43,8 @@ def unpack_matrix(matrix_archive_path: Path, matrices_path: Path) -> None:
 
 @app.command()
 def download(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
     tmp_path: DirPathOption = Path("tmp"),
 ):
     logger.info("Reading matrices spec from %s", matrices_spec_path)
@@ -51,7 +59,7 @@ def download(
     matrices_path.mkdir(exist_ok=True)
 
     for matrix in matrices:
-        if (matrices_path / (matrix.name + ".mtx")).exists():
+        if (matrices_path / (matrix.name + MTX_EXTENSION)).exists():
             logger.info("%s already downloaded, skipping", matrix.name)
             continue
 
