@@ -17,7 +17,22 @@ type RunToolCallable = Callable[
     Concatenate[Matrix, int, ...], subprocess.CompletedProcess[str]
 ]
 
-logger = logging.getLogger("app")
+LOGGER_NAME = "app"
+
+DEFAULT_MATRICES_SPEC_PATH = Path("matrices.yaml")
+DEFAULT_MATRICES_PATH = Path("matrices")
+DEFAULT_RAW_RESULTS_PATH = Path("results") / "raw"
+DEFAULT_DEPENDENCIES_PATH = Path("dependencies")
+DEFAULT_TOOLS_PATH = Path("tools")
+DEFAULT_LOGS_PATH = Path("logs")
+
+MTX_EXTENSION = ".mtx"
+IN_EXTENSION = ".in"
+REORDERED_SUFFIX = "_reordered"
+
+MAKE = "make"
+
+logger = logging.getLogger(LOGGER_NAME)
 
 
 class Algorithm(StrEnum):
@@ -51,6 +66,14 @@ class Results(TypedDict):
     tc: dict[str, dict[int, list[str]]]
 
 
+def make_empty_results() -> Results:
+    return Results(
+        bfs={},
+        sssp={},
+        tc={},
+    )
+
+
 def get_enabled_matrices(matrices_spec_path: Path) -> list[Matrix]:
     matrices: list[Matrix] = Matrix.from_yaml_file(matrices_spec_path)  # type: ignore
     return list(filter(lambda matrix: matrix.enabled, matrices))
@@ -68,15 +91,15 @@ def get_unique_by_name_matrices(matrices: list[Matrix]) -> list[Matrix]:
 
 
 def get_matrix_base_name(matrix: Matrix) -> str:
-    return matrix.name + ("_reordered" if matrix.reorder else "")
+    return matrix.name + (REORDERED_SUFFIX if matrix.reorder else "")
 
 
 def get_matrix_filename_mtx(matrix: Matrix) -> str:
-    return get_matrix_base_name(matrix) + ".mtx"
+    return get_matrix_base_name(matrix) + MTX_EXTENSION
 
 
 def get_matrix_filename_in(matrix: Matrix) -> str:
-    return get_matrix_base_name(matrix) + ".in"
+    return get_matrix_base_name(matrix) + IN_EXTENSION
 
 
 def comma_separated_str_to_int_list(str: str | None) -> list[int] | None:
@@ -139,11 +162,7 @@ def run_benchmarks(
     run_tool: RunToolCallable,
     **kwargs,
 ):
-    results: Results = {
-        "bfs": {},
-        "sssp": {},
-        "tc": {},
-    }
+    results: Results = make_empty_results()
 
     for matrix in matrices:
         base_name = get_matrix_base_name(matrix)
@@ -155,14 +174,13 @@ def run_benchmarks(
     return results
 
 
+def get_timestamp() -> str:
+    return datetime.now().astimezone().isoformat(timespec="minutes")
+
+
 def write_results(results: Results, raw_results_path: Path, tool: Tool):
     raw_results_path.mkdir(parents=True, exist_ok=True)
-    results_path = raw_results_path / (
-        datetime.now().astimezone().isoformat(timespec="minutes")
-        + "_"
-        + str(tool)
-        + ".json"
-    )
+    results_path = raw_results_path / (get_timestamp() + "_" + str(tool) + ".json")
     with open(results_path, "w", encoding="utf-8") as r_file:
         json.dump(results, r_file, indent=4)
 

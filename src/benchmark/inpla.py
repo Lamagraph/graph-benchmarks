@@ -7,6 +7,13 @@ from typing import Annotated
 import typer
 
 from ..common import (
+    DEFAULT_DEPENDENCIES_PATH,
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    DEFAULT_RAW_RESULTS_PATH,
+    DEFAULT_TOOLS_PATH,
+    LOGGER_NAME,
+    MAKE,
     Matrix,
     Tool,
     comma_separated_str_to_int_list,
@@ -19,14 +26,14 @@ from ..common import (
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 
 
 def make_inpla(inpla_path: Path) -> None:
-    subprocess.run(["make", "clean"], cwd=inpla_path, check=True)
-    subprocess.run(["make"], cwd=inpla_path, check=True)
-    subprocess.run(["make", "clean"], cwd=inpla_path, check=True)
-    subprocess.run(["make", "thread"], cwd=inpla_path, check=True)
+    subprocess.run([MAKE, "clean"], cwd=inpla_path, check=True)
+    subprocess.run([MAKE], cwd=inpla_path, check=True)
+    subprocess.run([MAKE, "clean"], cwd=inpla_path, check=True)
+    subprocess.run([MAKE, "thread"], cwd=inpla_path, check=True)
 
 
 def check_inpla(inpla_path: Path, inpla_bench_path: Path) -> None:
@@ -90,11 +97,11 @@ def run_inpla(
 
 @app.command()
 def inpla(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
-    inpla_path: DirPathOption = Path("dependencies") / "inpla",
-    inpla_bench_path: DirPathOption = Path("tools") / "QTreeInpla",
-    raw_results_path: DirPathOption = Path("results") / "raw",
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
+    inpla_path: DirPathOption = DEFAULT_DEPENDENCIES_PATH / "inpla",
+    inpla_bench_path: DirPathOption = DEFAULT_TOOLS_PATH / "QTreeInpla",
+    raw_results_path: DirPathOption = DEFAULT_RAW_RESULTS_PATH,
     check: Annotated[bool, typer.Option()] = False,
     run_count: Annotated[int, typer.Option] = 5,
     thread_counts: Annotated[str | None, typer.Option()] = None,

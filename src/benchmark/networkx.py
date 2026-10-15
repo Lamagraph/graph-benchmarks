@@ -1,25 +1,31 @@
 import logging
 import shutil
 import subprocess
-from datetime import datetime
 from pathlib import Path
 
 import typer
 
 from ..common import (
+    DEFAULT_MATRICES_PATH,
+    DEFAULT_MATRICES_SPEC_PATH,
+    DEFAULT_RAW_RESULTS_PATH,
+    DEFAULT_TOOLS_PATH,
+    LOGGER_NAME,
+    MTX_EXTENSION,
     Matrix,
     Tool,
     get_enabled_matrices_for_tool,
     get_matrix_filename_mtx,
+    get_timestamp,
 )
 from ..type_aliases import DirPathOption, FilePathOption
 
 app = typer.Typer()
-logger = logging.getLogger("app")
+logger = logging.getLogger(LOGGER_NAME)
 
 
 def clean_symlinks(nx_bench_path: Path):
-    matrices_to_clean = nx_bench_path.glob("**/*.mtx")
+    matrices_to_clean = nx_bench_path.glob(f"**/*{MTX_EXTENSION}")
     for file in matrices_to_clean:
         logger.info("Removing %s", file)
         file.unlink()
@@ -35,10 +41,10 @@ def symlink_matrices(matrices: list[Matrix], matrices_path: Path, nx_bench_path:
 
 @app.command()
 def networkx(
-    matrices_spec_path: FilePathOption = Path("matrices.yaml"),
-    matrices_path: DirPathOption = Path("matrices"),
-    nx_bench_path: DirPathOption = Path("tools/nx-benchmarks"),
-    raw_results_path: DirPathOption = Path("results") / "raw",
+    matrices_spec_path: FilePathOption = DEFAULT_MATRICES_SPEC_PATH,
+    matrices_path: DirPathOption = DEFAULT_MATRICES_PATH,
+    nx_bench_path: DirPathOption = DEFAULT_TOOLS_PATH / "nx-benchmarks",
+    raw_results_path: DirPathOption = DEFAULT_RAW_RESULTS_PATH,
 ):
     logger.info("Setting up NetworkX")
     subprocess.run(["uv", "sync"], cwd=nx_bench_path, check=True)
@@ -61,9 +67,7 @@ def networkx(
     )
     latest_json = json_files[0]
     raw_results_path.mkdir(parents=True, exist_ok=True)
-    results_path = raw_results_path / (
-        datetime.now().astimezone().isoformat(timespec="minutes") + "_networkx.json"
-    )
+    results_path = raw_results_path / (get_timestamp() + "_networkx.json")
     shutil.copy(latest_json, results_path)
 
     logger.info("Successfully wrote results to %s", results_path)
