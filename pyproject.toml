@@ -19,3 +19,8 @@ dependencies = [
 
 [tool.ruff]
 extend-exclude = ["dependencies", "tools", "scripts", "plots.ipynb"]
+
+[dependency-groups]
+dev = [
+    "ruff==0.17.0",
+]
