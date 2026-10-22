@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Benchmark infrastructure comparing Interaction Nets-based implementations of linear-algebra graph algorithms (QTreeVine, QTreeInpla) against references (QTreeFSharp, NetworkX, LAGraph). Algorithms: BFS, SSSP, Triangle Counting.
+For project description see `README.md`.
 
 ## Tools
 

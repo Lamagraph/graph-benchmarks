@@ -42,17 +42,15 @@ def make_matrix_nonnegative_int(matrices_path: Path, matrix: Matrix):
 # Based on https://github.com/Lamagraph/QTreeInpla/blob/main/scripts/simple_mtx_reordering.py
 def reorder_rcm_array(matrix_array):
     """
-    Переупорядочивание с помощью обратного алгоритма Катхилла-Макки (RCM).
-    Возвращает перестановку для строк и столбцов (одна и та же).
+    Reorder with the Reverse Cuthill-McKee (RCM) algorithm.
+    Returns the permutation for rows and columns (the same one for both).
     """
-    # Симметризуем структуру ненулевых элементов
     matrix_array_bin = (matrix_array != 0).astype(int)  # type: ignore
     matrix_array_sym = (matrix_array_bin + matrix_array_bin.T) > 0
     matrix_array_sym = matrix_array_sym.tocsr()
-    matrix_array_sym.setdiag(0)  # убираем петли (диагональ)
+    matrix_array_sym.setdiag(0)  # remove self-loops (diagonal)
     matrix_array_sym.eliminate_zeros()
 
-    # Вычисляем перестановку RCM
     perm = sp.csgraph.reverse_cuthill_mckee(matrix_array_sym, symmetric_mode=True)
     return perm
 
